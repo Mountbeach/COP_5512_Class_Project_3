@@ -1,81 +1,33 @@
-public class StrategyPercentAll extends Strategy
+/**
+ * Class containing an type of Strategy.
+ * @author	081028AW
+ */
+public class Strategy extends Object
    {
   /**
-   * Encoding for tit-for-tat strategy.
+   * Encoding for a strategy.
    */
 
+   int opponentLastMove = 1;
+   int myLastMove;
+   String name;
+
   // 0 = defect, 1 = cooperate
 
-   public StrategyTitForTat()
-  	{
-  	name = "Tit for Tat";
-  	opponentLastMove = 1;
-  	}  /* StrategyTitForTat */
+   public Strategy()
+      {
+      }  /* Strategy */
 
    public int nextMove()
-  	{
-  	return opponentLastMove;
-  	}  /* nextMove */
+      {
+      return 0;
+      }  /* nextMove */
 
 
-
- int numDefects;
-
-  // 0 = defect, 1 = cooperate
-
-   public StrategyTitForTwoTats()
-  	{
-  	name = "Tit for Two Tats";
-  	opponentLastMove = 1;
-  	numDefects = 0;
-  	}  /* StrategyTitForTwoTats */
-
-   public int nextMove2Tats()
-  	{
-  	if (opponentLastMove == 0)  numDefects++;
-
-  	if (opponentLastMove == 1)
-     	{
-     	numDefects = 0;
-     	return 1;
-     	}
-  	else
-     	{
-     		if (opponentLastMove == 0 && numDefects < 2)
-        		return 1;
-     		else  
-        		{
-        		return 0;
-        		}
-     	}
-
-  	}
-
-
-public StrategyAlwaysCooperate()
-  	{
-  	name = "Always cooperate";
-  	}  /* StrategyAlwaysCooperate */
-
-   public int nextMoveAlways()
-  	{
-  	return 1;
-  	}
-
-
-public StrategyRandom()
-  	{
-  	name = "Random";
-  	}  /* StrategyRandom */
-
-   public int nextMoveRandom()
-  	{
-  	if (Math.random() < 0.5)  return 1;
-  	return 0;
-  	}
-
-
-   }  
-
-
+   public void saveOpponentMove(int move)  { opponentLastMove = move; }
+   public int getOpponentLastMove()  { return opponentLastMove; }
+   public void saveMyMove(int move)  { myLastMove = move; }
+   public int getMyLastMove()  { return myLastMove; }
+   public String getName()  { return name; }
+   }  /* class Strategy */
 
