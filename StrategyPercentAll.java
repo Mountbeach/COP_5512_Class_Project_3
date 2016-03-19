@@ -1,15 +1,9 @@
 import java.util.ArrayList;
 
 public class StrategyPercentAll extends Strategy
-   {
-  /**
-   * Encoding for tit-for-tat strategy.
-   */
-
-  // 0 = defect, 1 = cooperate
-
-	
- 	int numDefects;
+{
+  	// 0 = defect, 1 = cooperate
+  	int numDefects;
 	int moveNum;
 	int ourScore;
 	int theirScore;
@@ -21,7 +15,6 @@ public class StrategyPercentAll extends Strategy
 	ArrayList<Integer> theirMoves = new ArrayList<>();
 	ArrayList<Integer> ourScores = new ArrayList<>();
 	ArrayList<Integer> theirScores = new ArrayList<>();
- 	
 
 	public StrategyPercentAll(){
 		
@@ -30,7 +23,6 @@ public class StrategyPercentAll extends Strategy
 		numDefects = 0;
 		ourScore = 0;
 		theirScore = 0;
-
 	}
 
 	public int nextMove(){
@@ -49,32 +41,27 @@ public class StrategyPercentAll extends Strategy
 
 		}
 
-		if (selection < .2)
+		/*if (selection < .2)
 			move = Pavlov();
 		else if(selection < .4)
 			move = Adaptive();
 		else
-			move = TitForTat();
+			move = TitForTat();*/
+		move = TidemanChieruzzi();
 		
 		moveNum++;
 		return move;
 
 	}
-
-
-
-   public int TitForTat()
-  	{
-  	//name = "Tit for Tat";
+	
+	public int TitForTat()
+	{
+	  //name = "Tit for Tat";
 	   
 	   if(moveNum == 0)
 		   opponentLastMove = 1;
 	   return opponentLastMove;
-  	}  /* StrategyTitForTat */
-
-
-
-
+	}  /* StrategyTitForTat */
 
 	public int Adaptive(){
 
@@ -118,10 +105,7 @@ public class StrategyPercentAll extends Strategy
 
 	}
 
-
-  // 0 = defect, 1 = cooperate
-
-   public int TitForTwoTats()
+	public int TitForTwoTats()
   	{
 	  	//name = "Tit for Two Tats";
 	  	if(moveNum == 0)
@@ -133,29 +117,26 @@ public class StrategyPercentAll extends Strategy
 	  	if (opponentLastMove == 0)  numDefects++;
 	
 	  	if (opponentLastMove == 1)
-     	{
-     	numDefects = 0;
-     	return 1;
-     	}
-	  	else
-     	{
-     		if (opponentLastMove == 0 && numDefects < 2)
-        		return 1;
-     		else  
-        		{
-        		return 0;
-        		}
-     	}
+	     	{
+		     numDefects = 0;
+		     return 1;
+	     	}
+		else
+	     	{
+	     		if (opponentLastMove == 0 && numDefects < 2)
+	        		return 1;
+	     		else  
+	        	{
+	        		return 0;
+	        	}
+	     	}
   	}
 	
 	public int AlwaysCooperate()
-	  	{
-	  	//name = "Always cooperate";
-		return 1;
-	  	}  /* StrategyAlwaysCooperate */
-	
-	
-	
+  	{
+  	//name = "Always cooperate";
+	return 1;
+  	}  /* StrategyAlwaysCooperate */
 	
 	public int Random()
   	{
@@ -177,8 +158,8 @@ public class StrategyPercentAll extends Strategy
 	}
 
 
-	public int TidemanChieruzzi()
-	{
+	public int TidemanChieruzzi()				//only checks for your score being 10 points above theirs
+	{							//as condidtion for start over, so technically truncated TideChier
 		int myscore = 0;
 		int theirscore = 0;
 		if(opponentLastMove == 0)
