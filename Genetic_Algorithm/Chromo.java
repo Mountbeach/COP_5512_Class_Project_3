@@ -13,9 +13,9 @@ public class Chromo
 *                            INSTANCE VARIABLES                                *
 *******************************************************************************/
 
-	public String chromo;
+	public String oldChromo;
 
-	public ArrayList <Double> newChromo;
+	public ArrayList <Double> chromo;
 	public double rawFitness;
 	public double sclFitness;
 	public double proFitness;
@@ -35,12 +35,12 @@ public class Chromo
 
 		//  Set gene values to a randum sequence of 1's and 0's
 		char geneBit;
-		chromo = "";
+		oldChromo = "";
 		
 		//	Sets first move
 		randnum = Search.r.nextDouble();
-		if (randnum > 0.5) this.newChromo.add((double)0);
-		else this.newChromo.add((double)1);
+		if (randnum > 0.5) this.chromo.add((double)0);
+		else this.chromo.add((double)1);
 		
 		//	Sets original percentages for strategies
 		List<Double> startChances = new ArrayList<Double>();
@@ -52,18 +52,18 @@ public class Chromo
 		}
 		Collections.shuffle(startChances);
 		for(double j:startChances)
-			this.newChromo.add(j);
+			this.chromo.add(j);
 		
 		//	Sets original number of turns till reevaluation
 		randnum = Search.r.nextInt(20);
-		this.newChromo.add(randnum);
+		this.chromo.add(randnum);
 		
 		
 		for (int j=0; j<Parameters.geneSize; j++){
 			randnum = Search.r.nextDouble();
 			if (randnum > 0.5) geneBit = '0';
 			else geneBit = '1';
-			this.chromo = chromo + geneBit;
+			this.oldChromo = oldChromo + geneBit;
 			
 		}
 
@@ -82,7 +82,7 @@ public class Chromo
 	public String getGeneAlpha(int geneID){
 		int start = geneID * Parameters.geneSize;
 		int end = (geneID+1) * Parameters.geneSize;
-		String geneAlpha = this.chromo.substring(start, end);
+		String geneAlpha = this.oldChromo.substring(start, end);
 		return (geneAlpha);
 	}
 
@@ -133,8 +133,8 @@ public class Chromo
 			//Randomly flips whether to co-op or defect
 			randnum = Search.r.nextDouble();
 			if (randnum < Parameters.mutationRate){
-				if (this.newChromo.get(0) == 1) this.newChromo.set(0, 0.0);
-				else this.newChromo.set(0, 1.0);
+				if (this.chromo.get(0) == 1) this.chromo.set(0, 0.0);
+				else this.chromo.set(0, 1.0);
 			}
 			
 			//For each strategy, either adds or subtracts from its chance
@@ -146,9 +146,9 @@ public class Chromo
 					randnum = Search.r.nextDouble();
 					if(randnum > .5){
 						List<Double> changeChances = new ArrayList<Double>();
-						double cap = 1 - this.newChromo.get(j);
+						double cap = 1 - this.chromo.get(j);
 						randnum = cap * Search.r.nextDouble();
-						this.newChromo.set(j, this.newChromo.get(j) + randnum);
+						this.chromo.set(j, this.chromo.get(j) + randnum);
 						cap = randnum;
 						
 						for (int k=0; k<(Parameters.geneSize - 1); k++){
@@ -162,15 +162,15 @@ public class Chromo
 						for(int k=0; k<Parameters.geneSize; k++){
 							if(k+1 == j)
 								continue;
-							this.newChromo.set(k+1, this.newChromo.get(k+1) - changeChances.get(counter));
+							this.chromo.set(k+1, this.chromo.get(k+1) - changeChances.get(counter));
 							counter++;
 						}
 					}
 					else{
 						List<Double> changeChances = new ArrayList<Double>();
-						double cap = this.newChromo.get(j);
+						double cap = this.chromo.get(j);
 						randnum = cap * Search.r.nextDouble();
-						this.newChromo.set(j, this.newChromo.get(j) - randnum);
+						this.chromo.set(j, this.chromo.get(j) - randnum);
 						cap = randnum;
 						
 						for (int k=0; k<(Parameters.geneSize - 1); k++){
@@ -184,7 +184,7 @@ public class Chromo
 						for(int k=0; k<Parameters.geneSize; k++){
 							if(k+1 == j)
 								continue;
-							this.newChromo.set(k+1, this.newChromo.get(k+1) + changeChances.get(counter));
+							this.chromo.set(k+1, this.chromo.get(k+1) + changeChances.get(counter));
 							counter++;
 						}
 					}
@@ -195,14 +195,14 @@ public class Chromo
 				randnum = Search.r.nextDouble();
 				if(randnum > .5){
 				
-					int numTurns = this.newChromo.get(Parameters.geneSize+1).intValue();
+					int numTurns = this.chromo.get(Parameters.geneSize+1).intValue();
 					
 					randnum = Search.r.nextInt(40) - 20;
 					numTurns += randnum;
 					if(numTurns < 0) numTurns = 0;
 					if(numTurns > 20) numTurns = 20;
 					
-					this.newChromo.set(Parameters.geneSize+1, (double)numTurns);
+					this.chromo.set(Parameters.geneSize+1, (double)numTurns);
 					
 				}
 				
@@ -287,6 +287,7 @@ public class Chromo
 	}
 
 	//  Produce a new child from two parents  **********************************
+	//	Modified for HW3
 
 	public static void mateParents(int pnum1, int pnum2, Chromo parent1, Chromo parent2, Chromo child1, Chromo child2){
 
@@ -298,11 +299,13 @@ public class Chromo
 		case 1:     //  Single Point Crossover
 
 			//  Select crossover point
-			xoverPoint1 = 1 + (int)(Search.r.nextDouble() * (Parameters.numGenes * Parameters.geneSize-1));
+			xoverPoint1 = 1 + (int)(Search.r.nextDouble() * Parameters.geneSize-1);
 
-			//  Create child chromosome from parental material
-			child1.chromo = parent1.chromo.substring(0,xoverPoint1) + parent2.chromo.substring(xoverPoint1);
-			child2.chromo = parent2.chromo.substring(0,xoverPoint1) + parent1.chromo.substring(xoverPoint1);
+			//  Create child chromo from parental material
+			child1.chromo.addAll((ArrayList<Double>)parent1.chromo.subList(0,xoverPoint1));
+			child1.chromo.addAll(parent2.chromo.subList(xoverPoint1, Parameters.geneSize));
+			child2.chromo.addAll((ArrayList<Double>)parent2.chromo.subList(0,xoverPoint1));
+			child2.chromo.addAll(parent1.chromo.subList(xoverPoint1, Parameters.geneSize));
 			break;
 
 		case 2:     //  Two Point Crossover
