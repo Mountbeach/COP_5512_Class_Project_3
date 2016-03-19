@@ -159,7 +159,7 @@ public class StrategyPercentAll extends Strategy
 
 
 	public int TidemanChieruzzi()				//only checks for your score being 10 points above theirs
-	{							//as condidtion for start over, so technically truncated TideChier
+	{							//as condidtion for start over, so technically truncated TidemanChieruzzi
 		int myscore = 0;
 		int theirscore = 0;
 		if(opponentLastMove == 0)
