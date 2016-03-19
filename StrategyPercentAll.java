@@ -14,6 +14,8 @@ public class StrategyPercentAll extends Strategy
 	int ourScore;
 	int theirScore;
 	
+	int defects = 0;
+	int coop = 0;	
 	
 	ArrayList<Integer> ourMoves = new ArrayList<>();
 	ArrayList<Integer> theirMoves = new ArrayList<>();
@@ -174,6 +176,117 @@ public class StrategyPercentAll extends Strategy
 		return 1;
 	}
 
+
+	public int TidemanChieruzzi()
+	{
+		int myscore = 0;
+		int theirscore = 0;
+		if(opponentLastMove == 0)
+		{
+			for(int i = 0; i < moveNum; i++)
+			{
+				if(theirMoves.get(i) == 0)
+					defects++;
+			}
+			defects--;
+			return 0;
+		}
+		else if(defects != 0)
+		{
+			defects--;
+			return 0;
+		}
+		else if(coop != 0)
+		{
+			coop--;
+			return 1;
+		}
+		else 
+		{
+			for(int i = 0; i < moveNum; i++)
+			{
+				myscore += ourScores.get(i);
+				theirscore += theirScores.get(i);
+			}
+			if((myscore - theirscore) > 10)
+			{
+				coop++;
+				return 1;
+			}
+			return 1;
+		}
+	}
+	
+	public int RevisedDowning()
+	{
+		int	move2 = 2;		
+		int TC = 0;			//# of times we cooperated
+		int TD = 0;			//# of times we defected
+		int CC = 0;			//# of times they cooperated afer we cooperated
+		int CD = 0;			//# of times they defected after we cooperated
+		int DC = 0;			//# of times they cooperated after we defected
+		int DD = 0;			//# of times they defected after we defected
+		
+		double pcc = 0;			//probability they cooperate if we previously cooperated
+		double pdc = 0.5;		//probability they cooperate if we previously defected
+		
+		if(moveNum == 0 || moveNum == 1)					//if 1st or second turn, cooperate
+			move2 = 1;
+		else if(moveNum > 1)							//if turn 3+
+		{
+			for(int i = 0; i < moveNum - 1; i++)				//calculate conditional probabilities
+			{
+				if(ourMoves.get(i) == 1)				//if we cooperated
+				{
+					TC++;						//increment total number of times we cooperated
+					if(theirMoves.get(i + 1) == 1)			//if they cooperated after we cooperated
+					{
+						CC++;					//increment count
+					}
+					else
+					{
+						CD++;
+					}
+				}
+				else							//we defected
+				{
+					TD++;						//increment total number of times we defected
+					if(theirMoves.get(i + 1) == 1)			//if they cooperated
+					{
+						DC++;					//increment count
+					}
+					else
+					{
+						DD++;			
+					}
+				}		
+			}
+			
+			pcc = (double) CC / TC;						//probability they cooperate after we cooperate
+			if(TD > 0)
+			{
+				pdc = (double) DC / TD;					//probability they cooperate after we defect
+			}
+			
+			double r = Math.random();					//randomly chose number between 0 - 1
+			if(myLastMove == 1)						//if we cooperated last move
+			{
+				if(r <= pcc)						//if r less than or equal to probability of cooperation
+					move2 = 1;					//cooperate
+				else
+					move2 = 0;					//otherwise defect
+			}
+			else								//if we defected last move
+			{
+				if(r <= pdc)						//if r less than or equal to probability they cooperate
+					move2 = 1;					//cooperate
+				else
+					move2 = 0;
+			}
+		
+		}
+		return move2;
+	}
 
 }  
 
