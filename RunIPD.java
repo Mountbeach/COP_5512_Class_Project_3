@@ -12,7 +12,7 @@ public class RunIPD extends Object
    public static void main(String args[])
       {
       int i;
-      int maxSteps = 0;
+      int maxSteps = 10;
 
       Strategy player1, player2;
       IteratedPD ipd;
@@ -26,8 +26,9 @@ public class RunIPD extends Object
             System.out.println(" Max steps = " + maxSteps);
             }  /* if */
          }  /* for i */
+	
 
-      player1 = new StrategyTitForTwoTats();
+      player1 = new StrategyPercentAll();
       player2 = new StrategyTitForTat();
       ipd = new IteratedPD(player1, player2);
 
