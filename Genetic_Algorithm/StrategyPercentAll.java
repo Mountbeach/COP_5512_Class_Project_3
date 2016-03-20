@@ -43,7 +43,7 @@ public class StrategyPercentAll extends Strategy
 		
 		//Orders percents from lowest to highest while rearanging an indexing 
 		//array to match the sequence of the strategies
-		dualQuickSort(percent, ordering, 0, Parameters.geneSize);
+		dualQuickSort(percent, ordering, 0, Parameters.geneSize-1);
 		
 		//Converts list of percents into a list of ranges, i.e
 		// .3, .3, .4 -> .3, .6, 1
@@ -72,11 +72,17 @@ public class StrategyPercentAll extends Strategy
 		
 		if(moveNum % turnsToWait == 0 && moveNum != 0){
 		
-			selection = Math.random();
-			int j = 0;
-			while(selection < percent.get(j))
-				j++;
-			currentStrategy = ordering.get(j);
+			selection = Search.r.nextDouble();
+			//System.out.println("\nSelection: " + selection);
+			
+			currentStrategy = Parameters.geneSize - 1;
+			for(int j = 0; j < Parameters.geneSize - 1; j++){
+				if(selection < percent.get(j)){
+					currentStrategy = ordering.get(j);
+					break;
+				}
+			}
+			
 			
 		}
 		

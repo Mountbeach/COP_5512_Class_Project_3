@@ -117,15 +117,16 @@ public class Search {
 	//	the appropriate class file (extending FitnessFunction.java) and add
 	//	an else_if block below to instantiate the problem.
  
+		//System.out.println(Parameters.problemType + "here");
 		if (Parameters.problemType.equals("NM")){
 				problem = new NumberMatch();
 		}
-		else if (Parameters.problemType.equals("OM")){
-				problem = new OneMax();
+		else if (Parameters.problemType.equals("PD")){
+				problem = new RunIPD();
 		}
-		else System.out.println("Invalid Problem Type");
+		else System.out.println("Invalid Probledsadrfadsm Type");
 
-		System.out.println(problem.name);
+		//System.out.println(problem.name);
 
 	//	Initialize RNG, array sizes and other objects
 		r.setSeed(Parameters.seed);
@@ -167,6 +168,7 @@ public class Search {
 			//	Begin Each Run
 			for (G=0; G<Parameters.generations; G++){
 
+				int roundsThisGen = r.nextInt(150) + 50;
 				sumProFitness = 0;
 				sumSclFitness = 0;
 				sumRawFitness = 0;
@@ -180,8 +182,7 @@ public class Search {
 					member[i].sclFitness = 0;
 					member[i].proFitness = 0;
 					member[i].index = i;
-
-					problem.doRawFitness(member[i]);
+					problem.doRawFitness(member[i], roundsThisGen);
 					
 					list.add(member[i]);
 
@@ -239,7 +240,7 @@ public class Search {
 							);
 
 				// Output generation statistics to screen
-				System.out.println(R + "\t" + G +  "\t" + (int)bestOfGenChromo.rawFitness + "\t" + averageRawFitness + "\t" + stdevRawFitness);
+				//System.out.println(R + "\t" + G +  "\t" + (int)bestOfGenChromo.rawFitness + "\t" + averageRawFitness + "\t" + stdevRawFitness);
 
 				//Output generation statistics to summary file
 				summaryOutput.write(" R ");
@@ -404,7 +405,9 @@ public class Search {
 		Hwrite.left("B", 8, summaryOutput);
 		summaryOutput.write("\t");
 		Hwrite.right((int)bestOfGenChromo.rawFitness, 7, summaryOutput);
-		summaryOutput.write("\n");
+		summaryOutput.write("\n\nBest Solution:\n");
+		
+		problem.doPrintGenes(bestOverAllChromo, summaryOutput);
 		
 		//	Output Fitness Statistics matrix
 		summaryOutput.write("Gen                 AvgFit              BestFit \n");
