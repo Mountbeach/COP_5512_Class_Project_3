@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class StrategyPercentAll extends Strategy
+public class StrategyTidemanChieruzzi extends Strategy
    {
   /**
    * Encoding for tit-for-tat strategy.
@@ -28,31 +28,15 @@ public class StrategyPercentAll extends Strategy
 	ArrayList<Double> percent = new ArrayList<>();
  	
 
-	public StrategyPercentAll(ArrayList<Double> strat){
+	public StrategyTidemanChieruzzi(){
 		
-		name = "Percent All";
+		name = "TidemanChieruzzi";
 		moveNum = 0;
 		numDefects = 0;
 		ourScore = 0;
 		theirScore = 0;
 		currentStrategy = -1;
-		
-		firstMove = strat.get(0).intValue();
-		for(int i = 1; i < Parameters.geneSize + 1; i++){
-			percent.add(strat.get(i));
-			ordering.add(i-1);
-		}
-		turnsToWait = strat.get(Parameters.geneSize + 1).intValue();
-		
-		//Orders percents from lowest to highest while rearanging an indexing 
-		//array to match the sequence of the strategies
-		dualQuickSort(percent, ordering, 0, Parameters.geneSize-1);
-		
-		//Converts list of percents into a list of ranges, i.e
-		// .3, .3, .4 -> .3, .6, 1
-		for(int i = 1; i < Parameters.geneSize; i++){
-			percent.set(i, percent.get(i-1) + percent.get(i));
-		}
+
 
 	}
 
@@ -72,23 +56,11 @@ public class StrategyPercentAll extends Strategy
 			theirScore += theirScores.get(moveNum-1);
 
 		}
-		
-		if(moveNum % turnsToWait == 0 && moveNum != 0){
-		
-			selection = Search.r.nextDouble();
-			//System.out.println("\nSelection: " + selection);
+
 			
-			currentStrategy = Parameters.geneSize - 1;
-			for(int j = 0; j < Parameters.geneSize - 1; j++){
-				if(selection < percent.get(j)){
-					currentStrategy = ordering.get(j);
-					break;
-				}
-			}
-			
-			
-		}
 		
+	
+		currentStrategy = 6;
 		switch (currentStrategy){
 			
 		case 0:
@@ -110,10 +82,10 @@ public class StrategyPercentAll extends Strategy
 			move = Random();
 			break;
 		case 6:
-			move = TidemanChieruzzi();
+			move = TidemanChieruzziCalc();
 			break;
 		case 7:
-			move = RevisedDowning();
+			move = RevisedDowningCalc();
 			break;
 		default:
 			move = firstMove;
@@ -270,7 +242,7 @@ public class StrategyPercentAll extends Strategy
 	            dualQuickSort(arr, arr2, index, right);
 	}
 
-	public int TidemanChieruzzi()				//only checks for your score being 10 points above theirs
+	public int TidemanChieruzziCalc()				//only checks for your score being 10 points above theirs
 	{							//as condidtion for start over, so technically truncated TidemanChieruzzi
 		int myscore = 0;
 		int theirscore = 0;
@@ -310,7 +282,7 @@ public class StrategyPercentAll extends Strategy
 		}
 	}
 	
-	public int RevisedDowning()
+	public int RevisedDowningCalc()
 	{
 		int	move2 = 2;		
 		int TC = 0;			//# of times we cooperated

@@ -30,8 +30,8 @@ public class RunIPD extends FitnessFunction
 	
 
       player1 = new StrategyPercentAll(x.chromo);
-      players[0] = new StrategyAlwaysCooperate();
-      players[1] = new StrategyAlwaysDefect();
+      players[0] = new StrategyRevisedDowning();
+      players[1] = new StrategyTidemanChieruzzi();
       players[2] = new StrategyRandom();
       players[3] = new StrategyTitForTat();
       players[4] = new StrategyTitForTwoTats();
@@ -49,6 +49,7 @@ public class RunIPD extends FitnessFunction
       } 
  
 
+	@Override
 	public void doPrintGenes(Chromo X, FileWriter output) throws java.io.IOException
 	{
 		Hwrite.left("First move: " + X.chromo.get(0).intValue(), 14, output);
