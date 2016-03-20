@@ -194,7 +194,7 @@ public class StrategyPercentAll extends Strategy
 				coop++;
 				return 1;
 			}
-			return 1;
+			return 0;
 		}
 	}
 	
