@@ -29,7 +29,7 @@ public class RunIPD extends Object
 	
 
       player1 = new StrategyPercentAll();
-      player2 = new StrategyTitForTat();
+      player2 = new StrategyPercentAll();
       ipd = new IteratedPD(player1, player2);
 
       ipd.runSteps(maxSteps);
